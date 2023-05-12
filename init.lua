@@ -13,6 +13,7 @@ if not vim.loop.fs_stat(lazypath) then
 	}
 end
 vim.opt.rtp:prepend(lazypath)
+-- vim.cmd("cd ~/git")
 
 require('lazy').setup({
 	'tpope/vim-fugitive',
@@ -95,7 +96,6 @@ require('lazy').setup({
 	{
 		-- Add indentation guides even on blank lines
 		'lukas-reineke/indent-blankline.nvim',
-
 		opts = {
 			char = '|',
 			show_trailing_blankline_indent = false,
@@ -136,8 +136,8 @@ require('lazy').setup({
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-
-require("nvim-tree").setup({
+local nvimtree = require("nvim-tree")
+nvimtree.setup({
 	sort_by = "case_sensitive",
 	view = {
 		width = 30,
@@ -146,15 +146,24 @@ require("nvim-tree").setup({
 		group_empty = true,
 	},
 	filters = {
-		dotfiles = true,
+		dotfiles = false,
 	},
+	git = {
+		ignore = false
+	}
 })
+
+-- nvimtree.config.git.k
+
+
 
 -- Set highlight on search
 vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = false
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -191,6 +200,9 @@ vim.keymap.set('n', 'q', "<Cmd>q<CR>")
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', "<leader>l", "<Cmd>NvimTreeToggle<CR>", { desc = "NvimTreeToggle" })
 -- Remap for dealing with word wrap
+-- if (Res == 0) then
+-- end
+
 
 -- set_terminal_keymaps()
 vim.keymap.set('n', 'ff', "<CMD>lua vim.lsp.buf.format({async = true})<CR>")
@@ -198,9 +210,19 @@ vim.keymap.set('n', '<leader>j', "", {
 	desc = "toogle term",
 	noremap = true,
 	callback = function()
+		os.execute("swaymsg splith");
+		os.execute("swaymsg layout tabbed");
 		os.execute("foot > /dev/null 2>&1 &");
 	end
 })
+
+-- insert mode
+vim.keymap.set('i', '<C-H>', "<Left>")
+vim.keymap.set('i', '<C-J>', "<Down>")
+vim.keymap.set('i', '<C-K>', "<Up>")
+vim.keymap.set('i', '<C-L>', "<Right>")
+
+
 vim.keymap.set('n', '<C-S-J>', "<Cmd>vertical resize +4<CR>")
 vim.keymap.set('n', '<C-H>', [[<C-w>h]])
 vim.keymap.set('n', '<C-L>', [[<C-w>l]])
@@ -253,6 +275,7 @@ vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { d
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>ec', "<Cmd>e ~/.config/nvim/init.lua<CR>", { desc = '[E]dit [C]onfiguration' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
