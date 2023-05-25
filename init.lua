@@ -13,11 +13,10 @@ if not vim.loop.fs_stat(lazypath) then
 	}
 end
 vim.opt.rtp:prepend(lazypath)
--- vim.cmd("cd ~/git")
 
 require('lazy').setup({
-	'tpope/vim-fugitive',
-	'tpope/vim-rhubarb',
+	'tpope/vim-fugitive', -- git
+	'tpope/vim-rhubarb', -- git
 	'nvim-tree/nvim-tree.lua',
 	{
 		-- LSP Configuration & Plugins
@@ -87,7 +86,8 @@ require('lazy').setup({
 		opts = {
 			options = {
 				icons_enabled = false,
-				-- theme = 'onedark',
+				theme = 'onedark',
+				path = 2,
 				component_separators = '|',
 				section_separators = '',
 			},
@@ -153,6 +153,8 @@ nvimtree.setup({
 	}
 })
 
+nvimtree.config.renderer.indent_markers.enable = true;
+
 -- nvimtree.config.git.k
 
 
@@ -189,6 +191,9 @@ vim.wo.signcolumn = 'yes'
 vim.o.updatetime = 250
 vim.o.timeout = true
 vim.o.timeoutlen = 300
+vim.o.cursorline = true
+vim.o.cursorcolumn = false
+vim.o.so = 20
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -218,6 +223,7 @@ vim.keymap.set('n', '<leader>j', "", {
 
 -- insert mode
 vim.keymap.set('i', '<C-H>', "<Left>")
+vim.keymap.set('n', ';', ":")
 vim.keymap.set('i', '<C-J>', "<Down>")
 vim.keymap.set('i', '<C-K>', "<Up>")
 vim.keymap.set('i', '<C-L>', "<Right>")
