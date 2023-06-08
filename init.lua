@@ -136,11 +136,32 @@ require('lazy').setup({
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+-- vim.g.guicursor = a:invisible
+vim.api.nvim_win_set_option(0, 'cursorline', false)
 local nvimtree = require("nvim-tree")
+local ntapi = require("nvim-tree.api")
+
+-- nvimtree.actions.
+
 nvimtree.setup({
 	sort_by = "case_sensitive",
+	hijack_cursor = true,
 	view = {
+		side = "right",
 		width = 30,
+		mappings = {
+			list = {
+				{ key = "l", action = "cd" },
+				{
+					key = "h",
+					action_cb = function()
+						ntapi.tree.change_root_to_parent()
+						ntapi.tree.collapse_all()
+					end
+				},
+
+			}
+		}
 	},
 	renderer = {
 		group_empty = true,
@@ -153,6 +174,7 @@ nvimtree.setup({
 	}
 })
 
+-- nvimtree.config.view.mappings.list.
 nvimtree.config.renderer.indent_markers.enable = true;
 
 -- nvimtree.config.git.k
@@ -204,6 +226,7 @@ vim.o.termguicolors = true
 vim.keymap.set('n', 'q', "<Cmd>q<CR>")
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', "<leader>l", "<Cmd>NvimTreeToggle<CR>", { desc = "NvimTreeToggle" })
+vim.keymap.set('i', "<A-L>", "9", { desc = "NvimTreeToggle" })
 -- Remap for dealing with word wrap
 -- if (Res == 0) then
 -- end
@@ -355,6 +378,7 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 vim.keymap.set('n', '<leader>q', "<Cmd>qa!<CR>", { desc = "close all" })
+vim.keymap.set('n', '<leader>ch', "<Cmd>%!xxd<CR>", { desc = "close all" })
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
