@@ -3,5 +3,3 @@
 code to execute a new program from nvim 
 
 os.execute("cd /; foot -e man foot > /dev/null 2>&1 &")
--- io.write("ciao mamma")
-
