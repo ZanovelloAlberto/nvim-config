@@ -27,8 +27,6 @@ require('lazy').setup({
 			'williamboman/mason-lspconfig.nvim',
 
 			-- Useful status updates for LSP
-			-- NOTE: `opts = {}` is the same as calling `krequire('fidget').setup({})`
-			{ 'j-hui/fidget.nvim', opts = {} },
 
 			-- Additional lua configuration, makes nvim stuff amazing!
 			'folke/neodev.nvim',
@@ -119,8 +117,8 @@ require('lazy').setup({
 	},
 
 	{
-		-- Highlight, edit, and navigate code
-		'nvim-treesitter/nvim-treesitter',
+	 	'nvim-treesitter/nvim-treesitter',
+		opts = function(_, opts) opts.ignore_install = { "help" } end,
 		dependencies = {
 			'nvim-treesitter/nvim-treesitter-textobjects',
 		},
@@ -143,25 +141,20 @@ local ntapi = require("nvim-tree.api")
 
 -- nvimtree.actions.
 
+  vim.keymap.set('n', 'L', ntapi.tree.change_root_to_node, { desc = "no" })
+  vim.keymap.set('n', 'H', function()
+    -- local node = ntapi.tree.get_node_under_cursor()
+	ntapi.tree.change_root_to_parent()
+	ntapi.tree.collapse_all()
+
+  end, { desc = "no" })
+
 nvimtree.setup({
 	sort_by = "case_sensitive",
 	hijack_cursor = true,
 	view = {
 		side = "right",
 		width = 30,
-		mappings = {
-			list = {
-				{ key = "l", action = "cd" },
-				{
-					key = "h",
-					action_cb = function()
-						ntapi.tree.change_root_to_parent()
-						ntapi.tree.collapse_all()
-					end
-				},
-
-			}
-		}
 	},
 	renderer = {
 		group_empty = true,
@@ -309,8 +302,9 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 require('nvim-treesitter.configs').setup {
+	
 	-- Add languages to be installed here that you want installed for treesitter
-	ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim' },
+	ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vim' },
 
 	-- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
 	auto_install = false,
@@ -432,9 +426,9 @@ navbuddy.setup {
 
 
 local servers = {
-	clangd = {},
+	-- clangd = {},
 	-- gopls = {},
-	pyright = {},
+	-- pyright = {},
 	-- rust_analyzer = {},
 	-- tsserver = {},
 	zls = {
@@ -459,11 +453,12 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Setup mason so it can manage external tooling
-require('mason').setup()
+require('mason').setup({
+	PATH = "prepend"
+})
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
-
 mason_lspconfig.setup {
 	ensure_installed = vim.tbl_keys(servers),
 }
